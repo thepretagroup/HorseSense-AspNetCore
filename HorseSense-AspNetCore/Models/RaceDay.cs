@@ -17,7 +17,6 @@ namespace HorseSense_AspNetCore.Models
 
         public RaceDay() => Races = new List<Race>();
 
-
         public override string ToString()
         {
             var RaceDayString = new StringBuilder("RaceDay: " + String.Join(",", Track, Date));

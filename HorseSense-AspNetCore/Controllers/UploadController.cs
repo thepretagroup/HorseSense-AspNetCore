@@ -27,6 +27,8 @@ namespace HorseSense_AspNetCore.Controllers
 
             var raceDay = await DrfParser.ParseFile(_context, file);
 
+            // @@@@@@ TODO: Calculate Factors
+
             return Ok(raceDay);
         }
     }

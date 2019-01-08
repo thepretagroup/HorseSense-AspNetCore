@@ -77,7 +77,6 @@ namespace HorseSense_AspNetCore.Helpers
             race.Horses.Add(horse);
 
             return raceDay;
-
         }
     }
 }

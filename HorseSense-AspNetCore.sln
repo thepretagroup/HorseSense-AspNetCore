@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HorseSense-AspNetCore", "HorseSense-AspNetCore\HorseSense-AspNetCore.csproj", "{895B1492-EA13-48B9-A74E-8CB917D51B35}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HorseSense-AspNetCore", "HorseSense-AspNetCore\HorseSense-AspNetCore.csproj", "{895B1492-EA13-48B9-A74E-8CB917D51B35}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HorseSenseTest", "HorseSenseTest\HorseSenseTest.csproj", "{204E8C4C-3D01-49CA-AC34-3108AD3ED31C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{895B1492-EA13-48B9-A74E-8CB917D51B35}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{895B1492-EA13-48B9-A74E-8CB917D51B35}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{895B1492-EA13-48B9-A74E-8CB917D51B35}.Release|Any CPU.Build.0 = Release|Any CPU
+		{204E8C4C-3D01-49CA-AC34-3108AD3ED31C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{204E8C4C-3D01-49CA-AC34-3108AD3ED31C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{204E8C4C-3D01-49CA-AC34-3108AD3ED31C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{204E8C4C-3D01-49CA-AC34-3108AD3ED31C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

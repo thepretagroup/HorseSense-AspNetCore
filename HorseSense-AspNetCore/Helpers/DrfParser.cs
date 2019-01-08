@@ -17,11 +17,17 @@ namespace HorseSense_AspNetCore.Helpers
             var lines = new List<string>();
             using (var reader = new StreamReader(file.OpenReadStream()))
             {
+                var firstLine = true;
                 while (reader.Peek() >= 0)
                 {
                     var line = await reader.ReadLineAsync();
                     var parsedRaceday = BrisnetRtfParser.ParseLine(line);
 
+                    if (firstLine)
+                    {
+                        RemoveOldDuplicateRaceDay(context, parsedRaceday);
+                        firstLine = false;
+                    }
                     raceDay = ParseLine(context, parsedRaceday);
                 }
             }
@@ -29,12 +35,35 @@ namespace HorseSense_AspNetCore.Helpers
             return raceDay;
         }
 
-        private static RaceDay ParseLine(HorseSenseContext context, RaceDay parsedRaceday)
+        private static void RemoveOldDuplicateRaceDay(HorseSenseContext context, RaceDay parsedRaceday)
+        {
+            var foundRaceDay = context.RaceDays
+                //.Include(rd => rd.Races)
+                //.ThenInclude(r => r.Horses)
+                .FirstOrDefault
+                (rd => rd.Track.Equals(parsedRaceday.Track)
+                 && rd.Date.Equals(parsedRaceday.Date));
+            if (foundRaceDay != null)
+            {
+                // Cascade delete is enabled by default in Entity Framework, this will remove raceday and its races & horses
+                // @@@@@@ But this doesn't seem to work !!!!!
+                context.RaceDays.Remove(foundRaceDay);
+                context.SaveChanges();
+            }
+        }
+
+        // @@@@@ TODO: Make private but allow unit testing
+        public static RaceDay ParseLine(HorseSenseContext context, RaceDay parsedRaceday)
         {
             var raceday = FindOrCreateRaceDay(context, parsedRaceday);
-            var race = FindOrCreateRace(context, raceday, parsedRaceday);
-            var horse = FindOrCreateHorse(context, race, parsedRaceday);
-
+            if (raceday != null)
+            {
+                var race = FindOrCreateRace(context, raceday, parsedRaceday);
+                if (race != null)
+                {
+                    var horse = FindOrCreateHorse(context, race, parsedRaceday);
+                }
+            }
             context.SaveChanges();
 
             return raceday;
@@ -44,8 +73,8 @@ namespace HorseSense_AspNetCore.Helpers
         {
             RaceDay raceDay = context.RaceDays
                 .Include(rd => rd.Races)
-                .ThenInclude(r => r.Horses)   //// @@@@ TODO: Move to FindOrCreateRace()
-                .FirstOrDefault<RaceDay>(rd => rd.Track.Equals(parsedRaceday.Track) && rd.Date.Equals(parsedRaceday.Date));
+                .ThenInclude(r => r.Horses)
+                .FirstOrDefault(rd => rd.Track.Equals(parsedRaceday.Track) && rd.Date.Equals(parsedRaceday.Date));
 
             if (raceDay == null)
             {
@@ -73,11 +102,17 @@ namespace HorseSense_AspNetCore.Helpers
                 }
             }
 
-            race = parsedRaceday.Races.First<Race>();
-            raceday.Races.Add(race);
-            context.Add(race);
-
-            return race;
+            if (parsedRaceday.Races != null && parsedRaceday.Races.Count > 0)
+            {
+                race = parsedRaceday.Races.First<Race>();
+                raceday.Races.Add(race);
+                context.Add(race);
+                return race;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         private static Horse FindOrCreateHorse(HorseSenseContext context, Race race, RaceDay parsedRaceday)
@@ -94,11 +129,19 @@ namespace HorseSense_AspNetCore.Helpers
             }
 
 
-            horse = parsedRaceday.Races.First<Race>().Horses.First<Horse>();
-            race.Horses.Add(horse);
-            context.Add(horse);
-
-            return horse;
+            if (parsedRaceday.Races != null 
+                && parsedRaceday.Races.First<Race>().Horses != null
+                && parsedRaceday.Races.First<Race>().Horses.Count > 0)
+            {
+                horse = parsedRaceday.Races.First<Race>().Horses.First<Horse>();
+                race.Horses.Add(horse);
+                context.Add(horse);
+                return horse;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

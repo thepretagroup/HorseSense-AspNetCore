@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using HorseSense_AspNetCore.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
-using HorseSense_AspNetCore.Models;
 
 namespace HorseSense_AspNetCore
 {
@@ -35,7 +28,25 @@ namespace HorseSense_AspNetCore
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                c.SwaggerDoc("v1", new Info
+                {
+                    Title = "HorseSense API",
+                    Version = "v1",
+                    Description = "Innovative strategies and solutions",
+                    TermsOfService = "None",
+                    
+                    Contact = new Contact
+                    {
+                        Name = "The Preta Group",
+                        Email = "dan@preta.com",                        
+                        Url = "https://preta.com/"
+                    },
+                    License = new License
+                    {
+                        Name = "Use under LICX",
+                        Url = "https://example.com/license"
+                    }
+                });
             });
         }
 
@@ -63,7 +74,7 @@ namespace HorseSense_AspNetCore
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "HorseSense API V1");
             });
 
             app.UseMvc();
